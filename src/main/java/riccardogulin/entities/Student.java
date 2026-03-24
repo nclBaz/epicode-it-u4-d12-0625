@@ -10,7 +10,10 @@ import jakarta.persistence.*;
 // N.B. Errore tipico è quello di dimenticarsi di aggiungere la classe al persistence.xml <class>riccardogulin.entities.Student</class>
 @Table(name = "students") // Annotazione opzionale. Molto utile però per personalizzare il nome della tabella
 public class Student {
-	@Id // Annotazione OBBLIGATORIA. Serve per dichiarare che questo attributo sarà PRIMARY KEY della tabellas students
+	@Id // Annotazione OBBLIGATORIA. Serve per dichiarare che questo attributo sarà PRIMARY KEY della tabella students
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Annotazione OPZIONALE però fondamentale se vogliamo che sia il DB
+	// a generare automaticamente i valori per il campo id. IDENTITY significa che long invece di corrispondere a biginteger
+	// verrà fatto corrispondere a bigserial (quindi intero autoincrementante)
 	@Column(name = "student_id")
 	private long id;
 
@@ -24,4 +27,43 @@ public class Student {
 	// Usando gli Enum JPA automaticamente imposterà un controllo nella colonna che va a validare inseriti. Cioè nel nostro caso
 	// si potranno inserire in quella colonna solo i valori FULLTIME o PARTTIME, non altri
 	private StudentType studentType;
+
+	public Student() {
+	} // OBBLIGATORIO PER TUTTE LE ENTITIES! Servirà a JPA quando leggerà dal DB dei record e dovrà creare degli oggetti
+
+	public Student(String name, String surname, StudentType type) {
+		this.name = name;
+		this.surname = surname;
+		this.studentType = type;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public StudentType getStudentType() {
+		return studentType;
+	}
+
+	public void setStudentType(StudentType studentType) {
+		this.studentType = studentType;
+	}
+
+	@Override
+	public String toString() {
+		return "Student{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", surname='" + surname + '\'' +
+				", studentType=" + studentType +
+				'}';
+	}
 }
